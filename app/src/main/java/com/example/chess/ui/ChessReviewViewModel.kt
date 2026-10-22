@@ -42,6 +42,10 @@ data class ChessUiState(
     val isReviewing: Boolean = false,
     val engineSettings: EngineSettings = EngineSettings(),
     val liveEvaluation: EngineEvaluation? = null,
+    val isRealStockfishActive: Boolean = false,
+    val activeEngineName: String = "Stockfish 19",
+    val engineDetails: String = "",
+    val engineWarning: String? = null,
     val statusMessage: String? = null
 ) {
     val currentPosition: ChessPosition
@@ -97,7 +101,26 @@ class ChessReviewViewModel(application: Application) : AndroidViewModel(applicat
         )
 
         viewModelScope.launch {
-            engine.initialize()
+            val isReal = engine.initialize()
+            val initialSettings = _uiState.value.engineSettings
+            if (isReal) {
+                engine.setOption("Threads", initialSettings.threads.toString())
+                engine.setOption("Hash", initialSettings.hashSizeMb.toString())
+                engine.setOption("MultiPV", initialSettings.multiPv.toString())
+            }
+
+            _uiState.value = _uiState.value.copy(
+                isRealStockfishActive = isReal,
+                activeEngineName = engine.engineName,
+                engineDetails = engine.engineDetails,
+                engineWarning = if (!isReal) {
+                    if (_uiState.value.isUkrainian)
+                        "Увага: Справжній Stockfish (${engine.lastError ?: "NDK binary"}). Запущено резервний режим Lite."
+                    else
+                        "Notice: Real Stockfish unavailable (${engine.lastError ?: "NDK binary"}). Using Lite fallback."
+                } else null
+            )
+
             // Seed initial sample games if database is empty
             launch {
                 val existing = database.gameDao().getGameById(1)
@@ -380,6 +403,12 @@ class ChessReviewViewModel(application: Application) : AndroidViewModel(applicat
 
     fun updateSettings(newSettings: EngineSettings) {
         _uiState.value = _uiState.value.copy(engineSettings = newSettings)
+        viewModelScope.launch {
+            engine.setOption("Threads", newSettings.threads.toString())
+            engine.setOption("Hash", newSettings.hashSizeMb.toString())
+            engine.setOption("MultiPV", newSettings.multiPv.toString())
+            updateLiveEvaluation()
+        }
     }
 
     fun clearStatusMessage() {

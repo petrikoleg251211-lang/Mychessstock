@@ -281,8 +281,7 @@ fun ChessApp(viewModel: ChessReviewViewModel = viewModel()) {
                     onDeleteGame = { viewModel.deleteGame(it) }
                 )
                 4 -> SettingsScreen(
-                    settings = uiState.engineSettings,
-                    isUkrainian = uiState.isUkrainian,
+                    state = uiState,
                     onSettingsChanged = { viewModel.updateSettings(it) },
                     onToggleLanguage = { viewModel.toggleLanguage() }
                 )

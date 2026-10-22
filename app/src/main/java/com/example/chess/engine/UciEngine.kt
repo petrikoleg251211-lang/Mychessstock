@@ -2,6 +2,10 @@ package com.example.chess.engine
 
 interface UciEngine {
     val engineName: String
+    val isRealStockfish: Boolean
+    val engineDetails: String
+    val lastError: String?
+
     suspend fun initialize(): Boolean
     suspend fun setOption(name: String, value: String)
     suspend fun newGame()

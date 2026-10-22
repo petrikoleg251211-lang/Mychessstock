@@ -33,8 +33,8 @@ data class EngineEvaluation(
 data class EngineSettings(
     val depth: Int = 22,
     val timeLimitPerMoveMs: Long = 1500L,
-    val threads: Int = 2,
-    val hashSizeMb: Int = 64,
+    val threads: Int = 4,
+    val hashSizeMb: Int = 128,
     val multiPv: Int = 1,
     val profileName: String = "Deep Grandmaster"
 )

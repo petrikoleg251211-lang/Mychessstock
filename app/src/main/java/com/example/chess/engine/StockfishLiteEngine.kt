@@ -17,7 +17,10 @@ import kotlin.coroutines.coroutineContext
  */
 class StockfishLiteEngine : UciEngine {
 
-    override val engineName: String = "Stockfish Lite (Built-in UCI)"
+    override val engineName: String = "Stockfish Lite (Fallback Engine)"
+    override val isRealStockfish: Boolean = false
+    override val engineDetails: String = "Built-in Kotlin Minimax Alpha-Beta Engine"
+    override val lastError: String? = null
 
     private var currentPosition: ChessPosition = ChessPosition()
     private var isSearching = false

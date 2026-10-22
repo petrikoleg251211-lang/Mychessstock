@@ -145,6 +145,41 @@ fun AnalysisScreen(
             isCurrentTurn = state.currentPosition.sideToMove == (if (!state.isFlipped) PieceColor.WHITE else PieceColor.BLACK)
         )
 
+        // Engine Telemetry & Active Engine Indicator
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 3.dp, horizontal = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(if (state.isRealStockfishActive) EmeraldPrimary else Color(0xFFFF9100))
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = if (state.isRealStockfishActive) "Stockfish 19 (NNUE)" else "Stockfish Lite (Fallback)",
+                    color = if (state.isRealStockfishActive) EmeraldPrimary else Color(0xFFFF9100),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            val live = state.liveEvaluation
+            if (live != null) {
+                Text(
+                    text = "d=${live.depth} • ${live.nps / 1000}k nps • best: ${live.bestMoveUci ?: "-"}",
+                    color = TextSecondary,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+            }
+        }
+
         // Review Progress Bar if running
         AnimatedVisibility(visible = state.isReviewing && state.reviewProgress != null) {
             val progress = state.reviewProgress

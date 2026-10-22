@@ -158,4 +158,61 @@ class ExampleUnitTest {
         assertTrue(eval.depth >= 1)
         engine.close()
     }
+
+    @Test
+    fun testRealStockfishBinaryUciHandshake() {
+        val binaryFile = java.io.File("src/main/jniLibs/x86_64/libstockfish.so")
+        if (!binaryFile.exists() || !binaryFile.canExecute()) {
+            return // Skip if running on non-x86 host without binary
+        }
+
+        val pb = ProcessBuilder(binaryFile.absolutePath)
+        pb.redirectErrorStream(true)
+        val proc = pb.start()
+
+        val reader = proc.inputStream.bufferedReader()
+        val writer = proc.outputStream.bufferedWriter()
+
+        writer.write("uci\n")
+        writer.flush()
+
+        var engineName: String? = null
+        var uciOk = false
+        var line: String?
+
+        while (reader.readLine().also { line = it } != null) {
+            val l = line?.trim() ?: break
+            if (l.startsWith("id name ")) {
+                engineName = l.removePrefix("id name ")
+            }
+            if (l == "uciok") {
+                uciOk = true
+                break
+            }
+        }
+
+        assertTrue("UCI handshake must output uciok", uciOk)
+        assertNotNull("Must capture engine name", engineName)
+        assertTrue("Must be Stockfish 19", engineName!!.contains("Stockfish 19"))
+
+        // Test position and search
+        writer.write("position startpos moves e2e4 e7e5\n")
+        writer.write("go depth 6\n")
+        writer.flush()
+
+        var bestMoveFound: String? = null
+        while (reader.readLine().also { line = it } != null) {
+            val l = line?.trim() ?: break
+            if (l.startsWith("bestmove ")) {
+                bestMoveFound = l.split("\\s+".toRegex()).getOrNull(1)
+                break
+            }
+        }
+
+        assertNotNull("Stockfish must output a legal best move", bestMoveFound)
+
+        writer.write("quit\n")
+        writer.flush()
+        proc.waitFor()
+    }
 }
