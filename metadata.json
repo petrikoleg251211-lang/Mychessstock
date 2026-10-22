@@ -1,0 +1,6 @@
+{
+  "name": "Stockfish Chess Review",
+  "description": "Deep local chess game analysis, accuracy reports, and Stockfish UCI engine review without subscriptions",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

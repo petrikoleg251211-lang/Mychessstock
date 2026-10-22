@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Stockfish Review</string>
+    <string name="tab_analysis">Аналіз</string>
+    <string name="tab_games">Бібліотека</string>
+    <string name="tab_import">Імпорт</string>
+    <string name="tab_settings">Налаштування</string>
+    
+    <string name="action_analyze">Почати огляд</string>
+    <string name="action_stop">Зупинити</string>
+    <string name="action_import_file">Відкрити PGN файл</string>
+    <string name="action_paste_pgn">Вставити PGN текст</string>
+    <string name="action_save_game">Зберегти партію</string>
+    <string name="action_export_pgn">Експорт PGN</string>
+    <string name="action_flip_board">Перевернути дошку</string>
+    <string name="action_reset_board">Нова позиція</string>
+    
+    <string name="move_brilliant">Геніальний</string>
+    <string name="move_best">Найкращий</string>
+    <string name="move_excellent">Відмінний</string>
+    <string name="move_good">Хороший</string>
+    <string name="move_book">Теорія</string>
+    <string name="move_inaccuracy">Неточність</string>
+    <string name="move_mistake">Помилка</string>
+    <string name="move_blunder">Зевок</string>
+    
+    <string name="eval_white">Білі</string>
+    <string name="eval_black">Чорні</string>
+    <string name="accuracy_label">Точність</string>
+    <string name="engine_depth">Глибина</string>
+    <string name="engine_nodes">Вузли</string>
+    <string name="engine_speed">Швидкість</string>
+    <string name="engine_best">Кращий</string>
+</resources>
